@@ -1,6 +1,6 @@
 # My Store
 
-A Commercial store application  
+A Commercial store management application  
 
 ## Features
 
