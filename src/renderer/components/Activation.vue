@@ -24,14 +24,7 @@
     <div class="col-xs-8 col-sm-8 col-md-6 col-offset-md-2 col-offset-lg-3 col-lg-5 mx-auto">
       <!-- <h2 class="title text-center">{{$t("activation")}}</h2> -->
       <div class="card">
-        <div class="header">
-          <p v-if="errors.length">
-            <b>{{ $t("correct_errors") }}</b>
-            <ul>
-              <li class="error" v-for="error in errors" :key="error">{{ error }}</li>
-            </ul>
-          </p>
-        </div>
+       <ErrorPanel :errors="errors"/>
         <div class="content">
           <form @submit="activate" novalidate="true">
             <div v-show="true" class="row">
@@ -43,9 +36,9 @@
                     class="form-control border-input keyinput"
                     v-model="token"
                     style="text-align:center"
-                    placeholder="Activation key"
+                    :placeholder="$t('key_activation')"
                     :disabled="is_loading"
-                    maxlength="19"
+                    :maxlength="getMaxLength()"
                     @keyup="splitToken()"
                   >
                    <font-awesome-icon v-if="is_loading" class="loading fa-spin" icon="circle-notch" />
@@ -54,12 +47,12 @@
             </div>
 
             <div  class="text-center">
-              <button @click="activate" type="submit" :disabled="is_loading" class="btn btn-outline-primar btn-block btn-success">
+              <button @click="activate" type="submit" :disabled="is_loading" class="btn btn-outline-primar btn-block btn-default">
                 <font-awesome-icon icon="sign-in-alt"/> {{$t("activate")}}
               </button>
               <br>
               <br>
-              <div v-if="is_trail" class="alert alert-info">
+              <div v-if="is_trail && trail_days_left > 0" class="alert alert-info">
               <h4>{{ $t("you_have_left",{days:trail_days_left})}}</h4>
               </div>
               
@@ -103,7 +96,7 @@ export default {
   data: function () {
     return {
       errors: [],
-      token: null,
+      token: "",
       serial: null,
       email: null,
       is_loading: false,
@@ -112,17 +105,31 @@ export default {
     }
   },
   methods: {
+    getMaxLength(){
+      console.log("leeeeee")
+      if(this.token.match(/\-/g)){
+          return 20+this.token.match(/\-/g).join('').length;
+      }else{
+          return 24;
+      }
+     
+      
+    },
     demo (e) {
       window.store.dispatch('is_trail', true)
       this.$router.push('home')
     },
     splitToken () {
       if (this.token.length >= 4) {
-        var numbers = this.token.match(/\d/g).join('')
+        var numbers = this.token.match(/\w/g).join('')
+        console.log("token" + this.token)
+        console.log("numbers")
         console.log(numbers)
         var splited = numbers.match(/\w{1,4}/g)
+        console.log("splited")
         console.log(splited)
         this.token = splited.join('-')
+        console.log("this.token")
         console.log(this.token)
       }
     },

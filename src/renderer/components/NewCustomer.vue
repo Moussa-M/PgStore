@@ -4,7 +4,7 @@
       <nav class="navbar navbar-default">
         <div class="nav-container">
           <div class="navbar-header" style="display: inline-flex;">
-            <a class="navbar-brand">{{$t("new_customer")}}</a>
+            <a class="navbar-brand">{{ $route.query.is_supplier ? $t("new_supplier"):$t("new_customer")}}</a>
           </div>
           <ul class="nav navbar-nav navbar-right" style="margin-right: 0px">
             <li>
@@ -17,20 +17,9 @@
       </nav>
       <div class="content" style="padding: 15px">
         <div class="container-fluid center-block" style="width:60%">
-          <div class="tab-content">
+          <div class="tab-content" style="width:100%">
             <div class="card">
-              <div class="header">
-                <div v-if="errors.length">
-                  <p>
-                    <b>{{ $t("correct_errors") }}</b>
-                  </p>
-                  <ul>
-                    <li class="error" v-for="error in errors" :key="error">
-                      {{ error }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
+             <ErrorPanel :errors="errors"/>
               <div class="content" style="padding: 0px">
                 <form novalidate="true">
                   <div class="row center-block text-center">
@@ -38,8 +27,8 @@
                       <div class="form-group">
                         <Avatar
                           image="static/assets/img/faces/avatar.png"
-                          :width="400"
-                          :height="400"
+                          :width="300"
+                          :height="300"
                           :crop="true"
                           :removeable="true"
                           @dataURL="processDataUrl"
@@ -99,8 +88,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
+                  <div  class="row">
+                    <div v-if="!$route.query.is_supplier"  class="col-md-6">
                       <div class="form-group">
                         <label>{{ $t("discount") }} ({{$t("discount_of_total_amount")}})</label>
                         <div class="input-group">
@@ -118,10 +107,26 @@
                         </div>
                       </div>
                     </div>
+                     <div v-if="$route.query.is_supplier"  class="col-md-6">
+                      <div class="form-group">
+                        <label>{{ $t("address") }} </label>
+         
+                          <input
+                            type="text"
+
+                            class="form-control border-input animated"
+                            v-model="customer.address"
+                            :placeholder="$t('address')"
+                          >
+       
+                    
+                      </div>
+                    </div>
                   </div>
+                  
 
                   <div :class="$i18n.locale=='ar'?'text-left':'text-right'">
-                    <button @click="add" type="submit" class="btn">{{$t("add")}}</button>
+                    <button @click="add" type="submit" class="btn btn-lg">{{$t("add")}}</button>
                   </div>
                   <div class="clearfix"></div>
                 </form>
@@ -148,17 +153,8 @@ export default {
   created () {
     console.log('newcustomer created')
     this.customers = store.getters.customers
-    const last_index = _.last(this.customers) ? parseInt(_.last(this.customers).id) + 1 : 1
-    this.customer = new Customer(
-      parseInt(last_index),
-      '',
-      '',
-      '',
-      'm',
-      '0.00',
-      null,
-      ''
-    )
+
+    this.customer = new Customer()
   },
   activated () {
     console.log('newcustomer activated')
@@ -246,8 +242,8 @@ export default {
         this.errors.push(this.$t('name_required'))
       } else {
         if (parseInt(this.customer.id) != 1) {
-          if (this.customer.name == 'Anounymous' || this.customer.name == 'anounymous') {
-            this.errors.push(this.$t('anounymous_taken'))
+          if (this.customer.name == 'Anonymous' || this.customer.name == 'anonymous') {
+            this.errors.push(this.$t('anonymous_taken'))
           }
         }
       }
@@ -264,7 +260,7 @@ export default {
       }
 
       if (this.errors.length == 0) {
-        this.customer.date = new Date().toISOString()
+      
 
         window.store.dispatch('addCustomer', this.customer)
         this.goBack()
@@ -314,7 +310,7 @@ export default {
 .main-panel {
   /*   border: 10px solid white;
     border-radius: 25px;*/
-  padding: 9px;
+  /* padding: 9px; */
   height: 100%;
   width: 100% !important;
 }

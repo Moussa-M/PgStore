@@ -1163,6 +1163,8 @@ fieldset[disabled] .btn-neutral.active {
 
 .btn:disabled, .btn[disabled], .btn.disabled {
     opacity: 0.5;
+   
+    border-color:#ffd700 ! important;
     filter: alpha(opacity=50);
 }
 
@@ -1178,7 +1180,7 @@ fieldset[disabled] .btn-neutral.active {
 .btn-lg {
     font-size: 18px;
    /* border-radius: 50px;*/
-    padding: 11px 30px;
+    /* padding: 11px 30px; */
     font-weight: 400;
 }
 
@@ -1509,14 +1511,14 @@ textarea.form-control {
     color: #B33C12;
 }
 
-.table thead tr > th,
+/* .table thead tr > th,
 .table thead tr > td,
 .table tbody tr > th,
 .table tbody tr > td,
 .table tfoot tr > th,
 .table tfoot tr > td {
     border-top: 1px solid #CCC5B9;
-}
+} */
 
 .table > thead > tr > th {
     border-bottom-width: 0;
@@ -1766,12 +1768,12 @@ textarea.form-control {
 }
 
 .navbar .navbar-nav > li > a.btn {
-    margin: 15px 3px;
+    margin: 3px 3px;
     padding: 7px 18px;
 }
 
 .navbar .btn {
-    margin: 15px 3px;
+    margin: 3px 3px;
     font-size: 14px;
 }
 
@@ -2110,7 +2112,7 @@ textarea.form-control {
 }
 
 .dropdown-menu > li > a img {
-    margin-top: -3px;
+    /* margin-top: -3px; */
 }
 
 .dropdown-menu > li > a:focus {
@@ -2350,7 +2352,7 @@ textarea.form-control {
 }
 
 .card ul.team-members li:not(:last-child) {
-    border-bottom: 1px solid #F1EAE0;
+    border: 1px solid #F1EAE0;
 }
 
 .card-user .image {
@@ -2450,7 +2452,7 @@ textarea.form-control {
 .ct-label {
     
     color: rgba(0, 0, 0, 0.4);
-    
+
     line-height: 1;
 }
 
@@ -2666,11 +2668,11 @@ textarea.form-control {
 }
 
 .ct-series-f .ct-point, .ct-series-f .ct-line, .ct-series-f .ct-bar, .ct-series-f .ct-slice-donut {
-    stroke: rgba(104, 179, 200, 0.8);
+    stroke: rgba(138, 138, 138, 0.8);
 }
 
 .ct-series-f .ct-slice-pie, .ct-series-f .ct-area {
-    fill: rgba(104, 179, 200, 0.8);
+    fill: rgba(138, 138, 138, 0.8);
 }
 
 .ct-series-g .ct-point, .ct-series-g .ct-line, .ct-series-g .ct-bar, .ct-series-g .ct-slice-donut {

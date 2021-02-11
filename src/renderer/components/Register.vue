@@ -8,20 +8,7 @@
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 mx-auto">
       <div class="card">
-        <div class="header">
-          <div v-if="errors.length">
-            <p>
-            <b>{{ $t("correct_errors") }}</b>
-            </p>
-            <ul>
-              <li class="error" v-for="error in errors" :key="error">
-                <p>
-                  {{ error }}
-                  </p>
-                  </li>
-            </ul>
-          </div>
-        </div>
+      <ErrorPanel :errors="errors"/>
         <div class="content">
           <form @submit="register" novalidate="true">
             <p>{{$t("store_info")}}</p>
@@ -141,6 +128,7 @@
 </template>
 <script>
 import LangChanger from './ChangeLang.vue'
+import { EmployeeLoggingLog } from './models';
 export default {
   name: "Register",
     components: {
@@ -201,9 +189,27 @@ export default {
           storelogo: "",
           email: this.email,
           password: this.password,
-          currency: this.currency
+          currency: this.currency,
+          created_date:new Date()
         });
-        window.store.dispatch("is_logged_in", true);
+        let emp = {
+          id:1,
+          name:"admin",
+          password:this.password,
+          phone:this.storephone,
+          email:this.email,
+          sex:"",
+          image:"",
+          allowed_actions:store.getters.all_actions,
+          shift_starting_date: null,
+          shift_ending_date:null,
+          created_date : new Date(),
+          is_deleted:false
+        }
+        let emplog = new EmployeeLoggingLog(1,"check_in");
+        window.store.dispatch("addEmployeeLog", emplog);
+        window.store.dispatch("addEmployee", emp);
+        window.store.dispatch("is_logged_in", {"status":true,"employee_id":1});
         window.store.dispatch("is_registered", true);
         // console.log(window.store);
         this.$router.push({ name: "activation" });
@@ -225,21 +231,20 @@ export default {
   color: #ff5722;
 }
 .errspanLTR {
-  float: right;
   color: grey;
-  font-size: 20px;
-  margin-right: 6px;
-  margin-top: -30px;
-  position: relative;
+  font-size: 25px;
+  right: 20px;
+  top: 50%;
+  position: absolute;
   z-index: 2;
 }
 .errspanRTL {
-  float: left;
+
   color: grey;
-  font-size: 20px;
-  margin-left: 6px;
-  margin-top: -30px;
-  position: relative;
+   font-size: 25px;
+  left: 20px;
+  top: 50%;
+  position: absolute;
   z-index: 2;
 }
 </style>

@@ -9,7 +9,7 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="#">{{$t("order_details")}}</a>
+                    <a class="navbar-brand" >{{$t("order_details")}}</a>
                 </div>
            
             </div>

@@ -16,8 +16,7 @@
                           :radius="1"
                         /> -->
               </td>
-              <td>
-                {{$t("invoice")}}: #{{order.id}}<br>
+              <td>{{$t("invoice")}}: #{{order.id.slice(0,8).toUpperCase()}}<br>
                 {{$t("created")}}: {{ invoiceDate() }}
                 <!-- <br>Due: February 1, 2015 -->
               </td>
@@ -56,10 +55,10 @@
       <tr v-for="item in items" :key="item.name" class="item">
         <td>{{item.name}}</td>
         <td align="center" class="text-center">{{item.sell_price}}</td>
-        <td align="center" class="text-center">{{item.unit=='piece'? item.qte:item.weight}} {{item.unit=='piece' ? ($t('piece')).toUpperCase():$t(item.unit)}}</td>
+        <td align="center" class="text-center">{{item.amount}} {{$t(item.unit)}}</td>
         <td
           :class="lang=='ar'?'text-left':'text-right'"
-        >{{(item.sell_price*(item.unit=='piece'? item.qte:item.weight)).toFixed(2)}}</td>
+        >{{(item.sell_price*item.amount).toFixed(2)}}</td>
       </tr>
 
       <tr class="total">
@@ -245,7 +244,7 @@ export default {
         }
 
         this.items = _.forEach(this.order.products, p => {
-          let amount = p.unit == 'piece' ? p.qte : p.weight
+          let amount = p.amount
           this.total = this.total + amount * p.sell_price
           this.discount =
             this.discount + (p.discount / 100) * (amount * p.sell_price)

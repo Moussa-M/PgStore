@@ -4,7 +4,7 @@
       <nav class="navbar navbar-default">
         <div class="nav-container">
           <div class="navbar-header" style="display: inline-flex;">
-            <a class="navbar-brand">{{$t("edit_customer")}}</a>
+                    <a class="navbar-brand">{{ $route.query.is_supplier ? $t("edit_supplier"):$t("edit_customer")}}</a>
           </div>
           <ul class="nav navbar-nav navbar-right" style="margin-right: 0px">
             <li>
@@ -19,18 +19,7 @@
         <div class="container-fluid center-block" style="width:60%">
           <div class="tab-content">
             <div class="card">
-              <div class="header">
-                <div v-if="errors.length">
-                  <p>
-                    <b>{{ $t("correct_errors") }}</b>
-                  </p>
-                  <ul>
-                    <li class="error" v-for="error in errors" :key="error">
-                      {{ error }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <ErrorPanel :errors="errors"/>
               <div class="content" style="padding: 0px">
                 <form novalidate="true">
                   <div class="row center-block text-center">
@@ -38,8 +27,8 @@
                       <div class="form-group">
                         <Avatar
                           :image="isNotEmpty(customer.image) ? customer.image:'static/assets/img/faces/avatar.png'"
-                          :width="400"
-                          :height="400"
+                          :width="300"
+                          :height="300"
                           :crop="true"
                           :removeable="true"
                           @dataURL="processDataUrl"
@@ -68,6 +57,7 @@
                         <label>{{ $t("phone") }}</label>
                         <input
                           type="text"
+                          :disabled="parseInt(customer.id) == 1"
                           class="form-control border-input"
                           v-model="customer.phone"
                           dir="ltr"
@@ -81,7 +71,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>{{ $t("sex") }}</label>
-                        <select class="form-control border-input" v-model="customer.sex" value="m">
+                        <select  :disabled="parseInt(customer.id) == 1" class="form-control border-input" v-model="customer.sex" value="m">
                           <option value="m">{{ $t("m") }}</option>
                           <option value="f">{{ $t("f") }}</option>
                         </select>
@@ -91,6 +81,7 @@
                       <div class="form-group">
                         <label for="exampleInputEmail1">{{ $t("email_address") }}</label>
                         <input
+                        :disabled="parseInt(customer.id) == 1"
                           type="email"
                           class="form-control border-input"
                           v-model="customer.email"
@@ -99,8 +90,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
+                        <div  class="row">
+                    <div v-if="!$route.query.is_supplier"  class="col-md-6">
                       <div class="form-group">
                         <label>{{ $t("discount") }} ({{$t("discount_of_total_amount")}})</label>
                         <div class="input-group">
@@ -108,7 +99,7 @@
                             type="number"
                             max="100"
                             min="0"
-                            step="0.1"
+                            step="0.01"
                             @change="customer.discount = parseFloat(customer.discount).toFixed(2)"
                             class="form-control border-input animated"
                             v-model="customer.discount"
@@ -118,10 +109,25 @@
                         </div>
                       </div>
                     </div>
+                     <div v-if="$route.query.is_supplier"  class="col-md-6">
+                      <div class="form-group">
+                        <label>{{ $t("address") }} </label>
+         
+                          <input
+                            type="text"
+
+                            class="form-control border-input animated"
+                            v-model="customer.address"
+                            :placeholder="$t('address')"
+                          >
+       
+                    
+                      </div>
+                    </div>
                   </div>
 
                   <div :class="$i18n.locale=='ar'?'text-left':'text-right'">
-                    <button @click="save" type="submit" class="btn">{{$t("save")}}</button>
+                    <button @click="save" type="submit" class="btn btn-lg">{{$t("update")}}</button>
                   </div>
                   <div class="clearfix"></div>
                 </form>
@@ -139,9 +145,9 @@ import Avatar from './sub_components/Avatar.vue'
 const nativeImage = require('electron').nativeImage
 const { app } = require('electron').remote
 const fs = require('fs-extra')
-
+const path = require("path")
 export default {
-  name: 'NewCustomer',
+  name: 'EditCustomer',
   props: {
     id: [Number, String]
   },
@@ -171,12 +177,11 @@ export default {
     removeImage () {
       this.customer.image = null
     },
-    processFile (e) {
+      processFile (e) {
       console.log(e)
       let ext = path.extname(e)
       let newpath =
-        app.getAppPath() +
-        '\\images\\customers\\' +
+        app.getAppPath().replace('app.asar', 'images\\customers\\') +
         Math.random()
           .toString()
           .substring(2) +
@@ -202,15 +207,18 @@ export default {
     imageRemoved () {
       this.customer.image = null
     },
-    processDataUrl (data) {
+ processDataUrl (data) {
+      console.log('data here')
       console.log(data)
       let reg = /\/\w+\;/
-      let ext = reg
-        .exec(data.substring(0, data.indexOf(',') + 1))[0]
+      let ext = reg.exec(data.substring(0, data.indexOf(',') + 1))[0]
         .replace(';', '')
         .replace('/', '')
+      console.log('app.getAppPath()')
+      console.log(app.getAppPath())
       let newpath =
-        app.getAppPath().replace('app.asar', 'images\\customers\\') +
+        app.getAppPath().replace('app.asar', '') +
+        'images\\customers\\' +
         Math.random()
           .toString()
           .substring(2) +
@@ -237,14 +245,8 @@ export default {
       console.log(this.customer)
       if (!this.customer.name) {
         this.errors.push(this.$t('name_required'))
-      } else {
-        if (parseInt(this.customer.id) != 1) {
-          if (this.customer.name == 'Anounymous' || this.customer.name == 'anounymous') {
-            this.errors.push(this.$t('anounymous_taken'))
-          }
-        }
       }
-      if (!this.customer.phone) {
+      if (!this.customer.phone && parseInt(this.customer.id) != 1) {
         this.errors.push(this.$t('phone_required'))
       }
       if (!this.customer.discount) {
@@ -308,7 +310,7 @@ export default {
 .main-panel {
   /*   border: 10px solid white;
     border-radius: 25px;*/
-  padding: 9px;
+  /* padding: 9px; */
   height: 100%;
   width: 100% !important;
 }

@@ -11,7 +11,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -20,6 +21,7 @@ const { VueLoaderPlugin } = require('vue-loader')
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
 let whiteListedModules = ['vue']
+//let whiteListedModules = []
 
 let rendererConfig = {
   name:'renderer',
@@ -48,6 +50,10 @@ let rendererConfig = {
       {
         test: /\.css$/,
         use: ['vue-style-loader', 'css-loader']
+      },
+      {
+        test: /\.styl(us)?$/,
+        use: ['vue-style-loader', 'css-loader','stylus-loader']
       },
       {
         test: /\.html$/,
@@ -111,23 +117,97 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
+    
     new VueLoaderPlugin(),
+    
     new MiniCssExtractPlugin({filename: 'styles.css'}),
     
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: path.resolve(__dirname, '../src/index.ejs'),
+    //   minify: {
+    //     collapseWhitespace: true,
+    //     removeAttributeQuotes: true,
+    //     removeComments: true
+    //   },
+    //   nodeModules: process.env.NODE_ENV !== 'production'
+    //     ? path.resolve(__dirname, '../node_modules')
+    //     : false
+    // }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
+      templateParameters(compilation, assets, options) {
+        return {
+          compilation: compilation,
+          webpack: compilation.getStats().toJson(),
+          webpackConfig: compilation.options,
+          htmlWebpackPlugin: {
+            files: assets,
+            options: options
+          },
+          process,
+        };
+      },
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
         removeComments: true
       },
-      nodeModules: process.env.NODE_ENV !== 'production'
-        ? path.resolve(__dirname, '../node_modules')
-        : false
+      nodeModules: false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    
+    // new UglifyJsPlugin({
+    //   test: /\.js(\?.*)?$/i,
+      
+    // })
+    // new TerserPlugin({
+    //   test: /\.js(\?.*)?$/i,
+    // })
+    new TerserPlugin({
+      test: /\.js(\?.*)?$/i,
+      terserOptions: {
+        parse: {
+          bare_returns:true,
+          ecma:8
+        },
+        compress: {
+          arguments:true,
+          drop_console: true,
+          hoist_funs:true,
+          keep_classnames: false,
+          keep_fnames: false,
+          hoist_vars:true,
+          toplevel: true,
+          unsafe_Function:true,
+          unsafe_methods:true,
+          module:true,
+          passes:10
+        },
+        mangle: {
+          // mangle options
+        
+          keep_classnames: false,
+          keep_fnames: false,
+          module:true
+
+      },
+      parallel: true,
+      cache: true,
+        ecma: 8, // specify one of: 5, 6, 7 or 8
+        keep_classnames: false,
+        keep_fnames: false,
+        ie8: false,
+        module: true,
+        nameCache: null, // or specify a name cache object
+        safari10: false,
+        toplevel: false,
+        warnings: false,
+      },
+    })
+    
   ],
   output: {
     filename: '[name].js',
@@ -263,6 +343,7 @@ let printerConfig = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
+
   ],
   output: {
     filename: '[name].js',
@@ -296,7 +377,8 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new BabiliWebpackPlugin(),
+     new BabiliWebpackPlugin(),
+  
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),
@@ -307,26 +389,12 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),
+
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
   )
-  // printerConfig.plugins.push(
-  //   new BabiliWebpackPlugin(),
-  //   new CopyWebpackPlugin([
-  //     {
-  //       from: path.join(__dirname, '../static'),
-  //       to: path.join(__dirname, '../dist/electron/static'),
-  //       ignore: ['.*']
-  //     }
-  //   ]),
-  //   new webpack.DefinePlugin({
-  //     'process.env.NODE_ENV': '"production"'
-  //   }),
-  //   new webpack.LoaderOptionsPlugin({
-  //     minimize: true
-  //   })
-  // )
+
 }
 
 module.exports = [rendererConfig,printerConfig]

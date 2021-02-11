@@ -1,22 +1,34 @@
-# pgstore
+# Pg Store
 
-> An electron-vue project
+A Commercial store management application  
 
-#### Build Setup
+## Features
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:9080
-npm run dev
-
-# build electron application for production
-npm run build
+* Stock management
+* Customers management
+* Orders management
+* Bills management
 
 
-```
+### Downloading
 
----
+* [Windows](https://github.com/Moussa-M/MyStore/releases/download/v1.0.0/MyStore-Setup-1.0.0.exe)
 
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+
+### Author
+
+* **Moussa Mokhtari**  [Linkedin](https://www.linkedin.com/in/mokhtari-moussa/)
+
+
+### Screen Shots
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-07.png"> 
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-20.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-25.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-29.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-38.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-37-47.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-38-54.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-39-11.png">
+<img src="https://github.com/Moussa-M/PgStore/blob/master/Screenshot%20from%202020-11-26%2021-39-25.png">
+
+

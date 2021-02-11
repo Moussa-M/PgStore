@@ -148,8 +148,7 @@
                           :radius="1"
                         />
                         </td>
-                        <td style="padding-top:30px">
-                          {{$t("invoice")}}: #{{order.id}}
+                        <td style="padding-top:30px">{{$t("invoice")}}: #{{order.id.slice(0,8).toUpperCase()}}
                           <br>
                           {{$t("created")}}: {{ invoiceDate() }}
                           <!-- <br>Due: February 1, 2015 -->
@@ -189,10 +188,10 @@
                 <tr v-for="item in items" :key="item.name" class="item">
                   <td>{{item.name}}</td>
                   <td align="center" class="text-center">{{item.sell_price}}</td>
-                  <td align="center" class="text-center">{{item.unit=='piece'? item.qte:item.weight}} {{item.unit=='piece' ? ($t('piece')).toUpperCase():$t(item.unit.toLowerCase())}}</td>
+                  <td align="center" class="text-center">{{item.amount}} {{$t(item.unit.toLowerCase())}}</td>
                   <td
                     :class="$i18n.locale=='ar'?'text-left':'text-right'"
-                  >{{(item.sell_price*(item.unit=='piece'? item.qte:item.weight)).toFixed(2)}}</td>
+                  >{{(item.sell_price*item.amount).toFixed(2)}}</td>
                 </tr>
                 <tr class="total">
                   <td></td>
@@ -268,27 +267,28 @@ export default {
     this.currency = store.getters.user.currency
 
     this.order = JSON.parse(JSON.stringify(store.getters.getOrder(this.id)))
+     this.order.customer  =store.getters.getCustomer(this.order.customer_id)
     // console.log("user");
     let user = store.getters.user
     // console.log(user);
     this.store = {
-      name: user.storename.trim(),
-      address: user.storeaddress.trim(),
-      phone: user.storephone.trim(),
+      name: user.storename,
+      address: user.storeaddress,
+      phone: user.storephone,
       logo: user.storelogo
     }
 
-    if (parseInt(this.order.customer.id) != 1) {
+    if (parseInt(this.order.customer_id) != 1) {
       this.customer = {
-        name: this.order.customer.name.trim(),
-        phone: this.order.customer.phone.trim()
+        name: this.order.customer.name,
+        phone: this.order.customer.phone
       }
     } else {
       this.customer = null
     }
 
     this.items = _.forEach(this.order.products, p => {
-      let amount = p.unit == 'piece' ? p.qte : p.weight
+      let amount =p.amount
       this.total = this.total + amount * p.sell_price
       this.discount =
         this.discount + (p.discount / 100) * (amount * p.sell_price)

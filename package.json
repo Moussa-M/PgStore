@@ -1,13 +1,14 @@
 {
-  "name": "MyStore",
-  "productName": "MyStore",
+  "name": "PgStore",
+  "productName": "PgStore",
   "version": "1.0.0",
   "author": "Moussa mokhtari <m_mokhtari@esi.dz>",
   "description": "Commercial Store management application ",
-  "license": null,
+  "license": "GPL",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/electron_builder.js && electron-builder",
+    "build:self": "electron-builder --dir",
     "build:dir": "node .electron-vue/electron_builder.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/electron_builder.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/electron_builder.js",
@@ -19,13 +20,15 @@
     "release": "build"
   },
   "build": {
-    "productName": "MyStore",
-    "appId": "pg.mystore.app",
-    "extraResources": ["SumatraPDF.exe"],
-    "publish":{
-      "provider":"github",
-      "repo":"MyStore",
-      "owner":"Moussa-M"
+    "productName": "PgStore",
+    "appId": "pg.Pgstore.app",
+    "extraResources": [
+      "SumatraPDF.exe"
+    ],
+    "publish": {
+      "provider": "github",
+      "repo": "PgStore",
+      "owner": "Moussa-M"
     },
     "directories": {
       "output": "build"
@@ -33,28 +36,41 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
+    },
     "nsis": {
-      "oneClick":"false",
-      "perMachine":"true",
-      "license":"build/licence.txt",
-      "installerIcon":"build/icons/installerIcon.ico",
-      "uninstallerIcon":"build/icons/uninstallerIcon.ico",
-      "deleteAppDataOnUninstall":"true"
+      "oneClick": "false",
+      "perMachine": "true",
+      "license": "build/licence.txt",
+      "installerIcon": "build/icons/installerIcon.ico",
+      "uninstallerIcon": "build/icons/uninstallerIcon.ico",
+      "deleteAppDataOnUninstall": "true"
     },
     "nsisWeb": {
-      "oneClick":"false",
-      "perMachine":"true",
-      "deleteAppDataOnUninstall":"true"
+      "oneClick": "false",
+      "perMachine": "true",
+      "deleteAppDataOnUninstall": "true"
     },
     "linux": {
       "icon": "build/icons"
     }
   },
   "dependencies": {
+    "@chenfengyuan/vue-barcode": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.14",
     "@fortawesome/free-solid-svg-icons": "^5.7.1",
     "@fortawesome/vue-fontawesome": "^0.1.5",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^3.3.7",
     "chartist": "^0.11.0",
     "electron-store": "^2.0.0",
@@ -62,28 +78,46 @@
     "font-awesome": "^4.7.0",
     "fs-extra": "^7.0.1",
     "hover.css": "^2.3.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "mousetrap": "^1.6.3",
+    "odometer": "^0.4.8",
     "puppeteer": "^1.13.0",
     "puppeteer-core": "^1.13.0",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^8.8.7",
     "systeminformation": "^3.54.0",
-    "vue": "^2.5.16",
+    "twix": "^1.2.1",
+    "uuid": "^3.3.2",
+    "v-tooltip": "^2.0.2",
+    "vue": "^2.6.10",
+    "vue-bootstrap-typeahead": "^0.2.6",
+    "vue-cli": "^2.9.6",
     "vue-electron": "^1.0.6",
     "vue-i18n": "^8.0.0",
+    "vue-js-grid": "^1.0.1",
+    "vue-material-design-icons": "^3.2.0",
+    "vue-msgbox": "^0.2.14",
+    "vue-odometer": "^1.0.2",
     "vue-plain-pagination": "^0.2.1",
     "vue-router": "^3.0.1",
+    "vue-swal": "^1.0.0",
     "vue2-datepicker": "^2.10.0",
-    "vueify": "^9.4.1",
+    "vuedraggable": "^2.20.0",
+    "vuetify": "^1.5.16",
     "vuex": "^3.0.1",
-    "vuex-electron": "^1.0.0"
+    "vuex-electron": "^1.0.0",
+    "webcamjs": "^1.0.25"
   },
   "devDependencies": {
+    "@mdi/font": "^3.7.95",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.5.0",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "babili-webpack-plugin": "^0.1.2",
@@ -94,29 +128,34 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^2.0.4",
+    "electron": "^2.0.18",
+    "electron-builder": "^20.40.2",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-packager": "^12.1.0",
-    "electron-builder": "^20.19.2",
     "electron-rebuild": "^1.8.1",
-    "mini-css-extract-plugin": "0.4.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "0.4.0",
     "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
-    "node-sass": "^4.9.2",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "terser-webpack-plugin": "^1.3.0",
+    "uglifyjs-webpack-plugin": "^2.1.3",
     "url-loader": "^1.0.1",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.2.4",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.16",
-    "webpack-cli": "^3.0.8",
     "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4",
     "webpack-hot-middleware": "^2.22.2",
-    "webpack-merge": "^4.1.3"
+    "webpack-merge": "^4.1.3",
+    "webpack-obfuscator": "^0.18.3"
   }
 }

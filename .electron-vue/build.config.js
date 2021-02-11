@@ -12,7 +12,7 @@ module.exports = {
   dir: path.join(__dirname, '../'),
   appVersion:'2.0.0',
   icon: path.join(__dirname, '../build/icons/ico'),
-  ignore: /(^\/(src|test|\.[a-z]+|README|yarn|static|dist\/web))|\.gitkeep/,
+  ignore: /(^\/(src|test|\.[a-z]+|README|yarn|dist\/web))|\.gitkeep/,
   out: path.join(__dirname, '../build'),
   overwrite: true,
   win32metadata:{},

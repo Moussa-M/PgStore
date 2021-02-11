@@ -1,7 +1,7 @@
 <template>
 
- <div class="row">
-    <div class="col-xs-4">
+ <div  @keyup.enter.stop="enterPressed()" @click="selectCustomer" tabindex="0" class="row hiddenFocus">
+    <div class="col-xs-3">
         <div class="avatar">
             <Avatar
                               :image="customer.image"
@@ -16,10 +16,13 @@
            
         </div>
     </div>
-    <div class="col-xs-5" style="overflow:hidden;max-height:50px;height:50px;text-overflow: ellipsis;">
-        {{customer.name}}
+    <div class="col-xs-6" style="overflow:hidden;max-height:50px;height:50px;text-overflow: ellipsis;display: flex;
+    align-items: center;">
+    <div>
+        {{customer.id == 1 ?$t("anonymous"):customer.name}}
         <br>
         <span class="text-success"><small dir="ltr">{{customer.phone}}</small></span>
+    </div>
     </div>
 
     <div :class="$i18n.locale=='ar'?'text-left':'text-right'"  class="col-xs-3">
@@ -57,6 +60,9 @@ export default {
   methods: {
     selectCustomer () {
       this.$emit('selectCustomer', this.id)
+    },
+    enterPressed () {
+      this.$emit('enterPressed', this.id)
     }
   }
 }
