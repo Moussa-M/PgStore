@@ -87,7 +87,7 @@
     "puppeteer-core": "^1.13.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^8.8.7",
-    "systeminformation": "^3.54.0",
+    "systeminformation": "^5.6.4",
     "twix": "^1.2.1",
     "uuid": "^3.3.2",
     "v-tooltip": "^2.0.2",
