@@ -79,7 +79,7 @@
     "fs-extra": "^7.0.1",
     "hover.css": "^2.3.2",
     "jquery": "^3.4.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "mousetrap": "^1.6.3",
     "odometer": "^0.4.8",
